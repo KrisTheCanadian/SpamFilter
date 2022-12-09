@@ -120,7 +120,7 @@ def get_cleaned_data():
   ax = sns.barplot(x=list(class_counts.keys()), y=list(class_counts.values()), color="blue")
 
   # Set the x-axis labels
-  ax.set_xticklabels(["Spam", "Ham"])
+  ax.set_xticklabels(["Ham", "Spam"])
 
   # Set the y-axis label
   ax.set_ylabel("Count")
