@@ -19,26 +19,50 @@ def get_cleaned_data():
   df.drop(df.columns.difference(['v1', 'v2']), 1, inplace=True)
 
   nRow, nCol = df.shape
-  print(f'There are {nRow} rows and {nCol} columns')
 
   df = df.rename({
-    "v1": "Category",
-    "v2": "Message"
-  }, axis=1)
+        "v1": "Category",
+        "v2": "Message"
+      }, axis=1)
 
   df["Label"] = df["Category"].map({
-    "ham": 0,
-    "spam": 1,
-  })
+        "ham": 0,
+        "spam": 1,
+      })
 
-  print(df.head(10))
-  # check for null values
-  print(df.isnull().sum())
+  # delete null values and delete duplicates 
+  df = df.dropna()
+  df1 = df.loc[df['Label'] == 0].drop_duplicates()
+    
+  df = pd.concat([df1,df.loc[df['Label'] == 1]])
+  
+
+#   # Appending 2nd dataset
+  df2 = pd.read_csv('spamExtra.csv', delimiter=',')
+
+  df2.drop(df2.columns.difference(['v1', 'v2']), 1, inplace=True)
+
+  nRow, nCol = df2.shape
+
+  df2 = df2.rename({
+        "v1": "Category",
+        "v2": "Message"
+      }, axis=1)
+
+  df2["Label"] = df2["Category"].map({
+        "ham": 0,
+        "spam": 1,
+      })
 
   # delete them
-  df = df.dropna()
-  print(f'There are {df.shape[0]} rows and {df.shape[1]} columns')
+  df2 = df2.dropna()
 
+  # Select rows belonging to class 1 from df2
+  df2_class_1 = df2.loc[df2['Label'] == 1]
+  df = pd.concat([df, df2_class_1])
+# +++++++++++++++++++++++++++++++++++++++++++++++++
+
+  print(f'There are {df.shape[0]} rows and {df.shape[1]} columns')
   # print value count
   print(df["Category"].value_counts())
 
@@ -110,9 +134,6 @@ def get_cleaned_data():
 
   # Transform the data using the SMOTE object
   X_train, y_train = smote.fit_resample(X_train, y_train)
-
-  # Count the number of spam and ham samples
-  # Import the seaborn and matplotlib.pyplot libraries
 
   # Count the number of spam and ham samples
   class_counts = Counter(y_train)
