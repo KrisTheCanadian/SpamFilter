@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import classification_report, accuracy_score, confusion_matrix
 
+
 # Data Preprocessing
 def get_cleaned_data():
   df = pd.read_csv('spam.csv', delimiter=',')
@@ -118,8 +119,8 @@ def get_cleaned_data():
 
   tokenizer = Tokenizer(num_words=vocab_size)
   tokenizer.fit_on_texts(X_train)
-  X_train = np.array(tokenizer.texts_to_sequences(X_train))
-  X_test = np.array(tokenizer.texts_to_sequences(X_test))
+  X_train = np.array(tokenizer.texts_to_sequences(X_train), dtype=object)
+  X_test = np.array(tokenizer.texts_to_sequences(X_test), dtype=object)
 
   # add padding to make tokens equal size
   sentence_len = 200
@@ -152,7 +153,6 @@ def get_cleaned_data():
 
   # Show the plot
   plt.show()
-
 
   return X_train, X_test, y_train, y_test, vocab_size, sentence_len
 
